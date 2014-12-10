@@ -1,6 +1,6 @@
 {
   "name": "laravel-elixir-requirejs",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Laravel Elixir RequireJS Extension",
   "main": "index.js",
   "scripts": {

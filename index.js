@@ -1,5 +1,5 @@
 var gulp = require('gulp'),
-    requirejs = require('gulp-requirejs'),
+    rjs = require('gulp-requirejs'),
     notify = require('gulp-notify');
     gulpif = require('gulp-if'),
     uglify = require('gulp-uglify'),
