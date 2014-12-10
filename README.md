@@ -1,4 +1,4 @@
-# laravel-elixir-requirejs
+# laravel-elixir-requirejs (WIP)
 
 Simple extension to *laravel elixir* to build javascript bundle with *requirejs*.
 
@@ -18,6 +18,10 @@ var elixir = require('laravel-elixir');
 require('laravel-elixir-requirejs');
 
 elixir(function(mix) {
-    mix.requirejs("bootstrap.js");
+    mix.requirejs("bootstrap.js", rjsOptions);
 });
 ```
+
+## TODO
+
+Set defaults.

@@ -7,7 +7,7 @@ var gulp = require('gulp'),
      _ = require('underscore'),
     utilities = require('laravel-elixir/ingredients/helpers/utilities');
 
-elixir.extend('requirejs', function (src, outputDir, options) {
+elixir.extend('requirejs', function (src, options) {
 
     var config = this,
         baseDir = config.assetsDir + 'js',
@@ -16,8 +16,6 @@ elixir.extend('requirejs', function (src, outputDir, options) {
     src = utilities.buildGulpSrc(src, baseDir, '**/*.js');
 
     defaultOptions = {
-        baseUrl: src,
-        out: 'bundle.js'
     };
 
     options = _.extend(defaultOptions, options);
@@ -34,15 +32,14 @@ elixir.extend('requirejs', function (src, outputDir, options) {
             this.emit('end');
         };
 
-        return rjs(options)
-            .pipe(requirejs(options)).on('error', onError)
+        return rjs(options).on('error', onError)
             .pipe(gulpif(config.production, uglify()))
             .pipe(gulp.dest(options.output || config.jsOutput))
-            .pipe(plugins.notify({
+            .pipe(notify({
                 title: 'Laravel Elixir',
                 message: 'RequireJS Compiled!',
                 icon: __dirname + '/../laravel-elixir/icons/laravel.png'
-            }));;
+            }));
     });
 
     this.registerWatcher('requirejs', baseDir + '/**/*.js');
