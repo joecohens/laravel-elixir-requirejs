@@ -1,48 +1,38 @@
 var gulp = require('gulp'),
     rjs = require('gulp-requirejs'),
-    notify = require('gulp-notify');
     gulpif = require('gulp-if'),
     uglify = require('gulp-uglify'),
+    _ = require('underscore'),
     elixir = require('laravel-elixir'),
-     _ = require('underscore'),
-    utilities = require('laravel-elixir/ingredients/helpers/utilities');
+    utilities = require('laravel-elixir/ingredients/commands/Utilities'),
+    notification = require('laravel-elixir/ingredients/commands/Notification');
 
 elixir.extend('requirejs', function (src, options) {
 
     var config = this,
-        baseDir = config.assetsDir + 'js',
-        defaultOptions;
-
-    src = utilities.buildGulpSrc(src, baseDir, '**/*.js');
-
-    defaultOptions = {
-    };
+        defaultOptions = {
+            debug:         ! config.production,
+            srcDir:        config.assetsDir + 'js',
+            output:        config.jsOutput
+        };
 
     options = _.extend(defaultOptions, options);
+    src = "./" + utilities.buildGulpSrc(src, options.srcDir);
 
     gulp.task('requirejs', function () {
-        var onError = function(err) {
-            notify.onError({
-                title:    "Laravel Elixir",
-                subtitle: "RequireJS Failed!",
-                message:  "Error: <%= error.message %>",
-                icon: __dirname + '/../laravel-elixir/icons/fail.png'
-            })(err);
 
+        var onError = function(e) {
+            new notification().error(e, 'RequireJS Failed!');
             this.emit('end');
         };
 
         return rjs(options).on('error', onError)
-            .pipe(gulpif(config.production, uglify()))
-            .pipe(gulp.dest(options.output || config.jsOutput))
-            .pipe(notify({
-                title: 'Laravel Elixir',
-                message: 'RequireJS Compiled!',
-                icon: __dirname + '/../laravel-elixir/icons/laravel.png'
-            }));
+            .pipe(gulpIf(! options.debug, uglify()))
+            .pipe(gulp.dest(options.output))
+            .pipe(new notification().message('RequireJS Compiled!'));
     });
 
-    this.registerWatcher('requirejs', baseDir + '/**/*.js');
+    this.registerWatcher('requirejs', options.srcDir + '/**/*.js');
 
     return this.queueTask('requirejs');
 
