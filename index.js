@@ -11,9 +11,9 @@ elixir.extend('requirejs', function (src, options) {
 
     var config = this,
         defaultOptions = {
-            debug:         ! config.production,
-            srcDir:        config.assetsDir + 'js',
-            output:        config.jsOutput
+            debug:  ! config.production,
+            srcDir: config.assetsDir + 'js',
+            output: config.jsOutput
         };
 
     options = _.extend(defaultOptions, options);

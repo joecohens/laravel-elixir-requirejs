@@ -1,4 +1,4 @@
-# laravel-elixir-requirejs (WIP)
+# laravel-elixir-requirejs
 
 Simple extension to *laravel elixir* to build javascript bundle with *requirejs*.
 
@@ -13,9 +13,9 @@ npm install --save-dev laravel-elixir-requirejs
 ### Example *Gulpfile*:
 
 ```javascript
-var elixir = require('laravel-elixir');
+var elixir = require("laravel-elixir");
 
-require('laravel-elixir-requirejs');
+require("laravel-elixir-requirejs");
 
 elixir(function(mix) {
     mix.requirejs("bootstrap.js", rjsOptions);
@@ -24,4 +24,4 @@ elixir(function(mix) {
 
 ## TODO
 
-Set defaults.
+[] Set defaults.
