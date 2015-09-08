@@ -1,39 +1,48 @@
 var gulp = require('gulp'),
     rjs = require('gulp-requirejs'),
-    gulpIf = require('gulp-if'),
-    uglify = require('gulp-uglify'),
+    gulpIgnore = require('gulp-ignore'),
     _ = require('underscore'),
-    elixir = require('laravel-elixir'),
-    utilities = require('laravel-elixir/ingredients/commands/Utilities'),
-    notification = require('laravel-elixir/ingredients/commands/Notification');
+    Elixir = require('laravel-elixir');
 
-elixir.extend('requirejs', function (src, options) {
+var $ = Elixir.Plugins;
+var config = Elixir.config;
 
-    var config = this,
-        defaultOptions = {
-            debug:  ! config.production,
-            srcDir: config.assetsDir + 'js',
-            output: config.jsOutput
-        };
+Elixir.extend('requirejs', function (src, options) {
+    options = _.extend({
+        debug:     ! config.production,
+        srcDir:    config.get('assets.js.folder'),
+        outputDir: config.get('public.js.outputFolder'),
+    }, options);
 
-    options = _.extend(defaultOptions, options);
-    src = "./" + utilities.buildGulpSrc(src, options.srcDir);
+    var paths = prepGulpPaths(src, options.srcDir, options.outputDir);
 
-    gulp.task('requirejs', function () {
+    new Elixir.Task('requirejs', function () {
+        this.log(paths.src, paths.output);
 
-        var onError = function(e) {
-            new notification().error(e, 'RequireJS Failed!');
-            this.emit('end');
-        };
+        return (
+            rjs(options)
+                .on('error', function(e) {
+                    new Elixir.Notification('RequireJS Compilation Failed!');
 
-        return rjs(options).on('error', onError)
-            .pipe(gulpIf(! options.debug, uglify()))
-            .pipe(gulp.dest(options.output))
-            .pipe(new notification().message('RequireJS Compiled!'));
-    });
-
-    this.registerWatcher('requirejs', options.srcDir + '/**/*.js');
-
-    return this.queueTask('requirejs');
-
+                    this.emit('end');
+                })
+                .pipe($.if(! options.debug, $.uglify()))
+                .pipe(gulp.dest(paths.output.baseDir))
+                .pipe(new Elixir.Notification('RequireJS Compiled!'))
+        );
+    })
+    .watch(config.get('assets.js.folder') + '/**/*.js');
 });
+
+/**
+ * Prep the Gulp src and output paths.
+ *
+ * @param {string|array} src
+ * @param {string|null}  baseDir
+ * @param {string|null}  output
+ */
+var prepGulpPaths = function(src, baseDir, output) {
+    return new Elixir.GulpPaths()
+        .src(src, baseDir)
+        .output(output, 'app.js');
+};
