@@ -1,19 +1,22 @@
-var gulp = require('gulp'),
-    rjs = require('gulp-requirejs'),
-    _ = require('underscore'),
-    Elixir = require('laravel-elixir');
+var gulp = require('gulp');
+var rjs = require('gulp-requirejs');
+var _ = require('underscore');
+var Elixir = require('laravel-elixir');
 
 var $ = Elixir.Plugins;
 var config = Elixir.config;
 
-Elixir.extend('requirejs', function (src, options) {
-    options = _.extend({
-        debug:     ! config.production,
-        srcDir:    config.get('assets.js.folder'),
-        outputDir: config.get('public.js.outputFolder'),
-    }, options);
+Elixir.extend('requirejs', function (src, output, options) {
+    var paths = prepGulpPaths(src, output);
 
-    var paths = prepGulpPaths(src, options.srcDir, options.outputDir);
+    options = _.extend({
+        name: paths.src.name.replace(paths.src.extesion, ''),
+        baseUrl: paths.src.baseDir,
+        out: paths.output.name,
+        findNestedDependencies: true,
+        skipPragmas: true,
+        create: true
+    }, options);
 
     new Elixir.Task('requirejs', function () {
         this.log(paths.src, paths.output);
@@ -25,7 +28,7 @@ Elixir.extend('requirejs', function (src, options) {
 
                     this.emit('end');
                 })
-                .pipe($.if(! options.debug, $.uglify()))
+                .pipe($.if(! config.production, $.uglify()))
                 .pipe(gulp.dest(paths.output.baseDir))
                 .pipe(new Elixir.Notification('RequireJS Compiled!'))
         );
@@ -37,11 +40,12 @@ Elixir.extend('requirejs', function (src, options) {
  * Prep the Gulp src and output paths.
  *
  * @param {string|array} src
- * @param {string|null}  baseDir
  * @param {string|null}  output
+ * @return {object}
  */
-var prepGulpPaths = function(src, baseDir, output) {
+var prepGulpPaths = function(src, output) {
     return new Elixir.GulpPaths()
-        .src(src, baseDir)
-        .output(output, 'app.js');
+        .src(src, config.get('assets.js.folder'))
+        .output(output || config.get('public.js.outputFolder'), 'app.js');
 };
+

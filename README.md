@@ -13,15 +13,19 @@ npm install --save-dev laravel-elixir-requirejs
 ### Example *Gulpfile*:
 
 ```javascript
-var elixir = require("laravel-elixir");
+var elixir = require('laravel-elixir');
 
-require("laravel-elixir-requirejs");
+require('laravel-elixir-requirejs');
 
 elixir(function(mix) {
-    mix.requirejs("bootstrap.js", rjsOptions);
+    mix.requirejs('app.js');
 });
 ```
 
-## TODO
+You can also use advanced options.
 
-[] Set defaults.
+```javascript
+mix.requirejs(src, output, options);
+```
+
+
