@@ -25,7 +25,7 @@ elixir(function(mix) {
 You can also use advanced options.
 
 ```javascript
-mix.requirejs(src, output, options);
+mix.requirejs(src, options, output);
 ```
 
 

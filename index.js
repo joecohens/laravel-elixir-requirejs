@@ -6,7 +6,7 @@ var Elixir = require('laravel-elixir');
 var $ = Elixir.Plugins;
 var config = Elixir.config;
 
-Elixir.extend('requirejs', function (src, output, options) {
+Elixir.extend('requirejs', function (src, options, output) {
     var paths = prepGulpPaths(src, output);
 
     options = _.extend({
