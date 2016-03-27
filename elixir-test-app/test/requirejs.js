@@ -21,6 +21,20 @@ describe('RequireJS Task', function() {
         });
     });
 
+    it('should not break stream and process the next mix steps', done => {
+        Elixir(mix => {
+            mix.requirejs('main.js');
+            mix.copy('resources/assets/css/style.css', 'public/css/style.css');
+        });
+
+        runGulp(() => {
+            shouldExist('./public/js/main.js');
+            shouldExist('./public/css/style.css');
+
+            done();
+        });
+    });
+
 });
 
 var shouldExist = (file) => {
@@ -32,5 +46,6 @@ var runGulp = assertions => {
         assertions();
 
         remove.sync('./public/js');
+        remove.sync('./public/css');
     });
 };
