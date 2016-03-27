@@ -10,7 +10,7 @@ Elixir.extend('requirejs', function (src, options, output) {
     var paths = prepGulpPaths(src, output);
 
     options = _.extend({
-        name: paths.src.name.replace(paths.src.extesion, ''),
+        name: paths.src.name.replace(paths.src.extension, ''),
         baseUrl: paths.src.baseDir,
         out: paths.output.name,
         findNestedDependencies: true,
