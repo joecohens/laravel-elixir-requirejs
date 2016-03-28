@@ -10,7 +10,7 @@ Elixir.extend('requirejs', function (src, options, output) {
     var paths = prepGulpPaths(src, output);
 
     options = _.extend({
-        name: paths.src.name.replace(paths.src.extesion, ''),
+        name: paths.src.name.replace(paths.src.extension, ''),
         baseUrl: paths.src.baseDir,
         out: paths.output.name,
         findNestedDependencies: true,
@@ -22,15 +22,19 @@ Elixir.extend('requirejs', function (src, options, output) {
         this.log(paths.src, paths.output);
 
         return (
-            rjs(options)
-                .on('error', function(e) {
-                    new Elixir.Notification('RequireJS Compilation Failed!');
+            gulp
+                .src(paths.src.path)
+                .pipe(
+                    rjs(options)
+                        .on('error', function (e) {
+                            new Elixir.Notification().error(e, 'RequireJS Compilation Failed!');
 
-                    this.emit('end');
-                })
-                .pipe($.if(! config.production, $.uglify()))
-                .pipe(gulp.dest(paths.output.baseDir))
-                .pipe(new Elixir.Notification('RequireJS Compiled!'))
+                            this.emit('end');
+                        })
+                        .pipe($.if(!config.production, $.uglify()))
+                        .pipe(gulp.dest(paths.output.baseDir))
+                        .pipe(new Elixir.Notification('RequireJS Compiled!'))
+                )
         );
     })
     .watch(config.get('assets.js.folder') + '/**/*.js');
@@ -43,7 +47,7 @@ Elixir.extend('requirejs', function (src, options, output) {
  * @param {string|null}  output
  * @return {object}
  */
-var prepGulpPaths = function(src, output) {
+var prepGulpPaths = function (src, output) {
     return new Elixir.GulpPaths()
         .src(src, config.get('assets.js.folder'))
         .output(output || config.get('public.js.outputFolder'), 'app.js');
