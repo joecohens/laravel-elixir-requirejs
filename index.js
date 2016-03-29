@@ -52,4 +52,3 @@ var prepGulpPaths = function (src, output) {
         .src(src, config.get('assets.js.folder'))
         .output(output || config.get('public.js.outputFolder'), 'app.js');
 };
-
