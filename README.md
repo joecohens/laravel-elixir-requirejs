@@ -1,5 +1,7 @@
 # laravel-elixir-requirejs
 
+[![Build Status](https://travis-ci.org/joecohens/laravel-elixir-requirejs.svg?branch=master)](https://travis-ci.org/joecohens/laravel-elixir-requirejs)
+
 Simple extension to *laravel elixir* to build javascript bundle with *requirejs*.
 
 ## Install
@@ -27,5 +29,3 @@ You can also use advanced options.
 ```javascript
 mix.requirejs(src, options, output);
 ```
-
-
