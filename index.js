@@ -32,7 +32,7 @@ Elixir.extend('requirejs', function (src, options, output) {
                             this.emit('end');
                         })
                 )
-                .pipe($.if(!config.production, $.uglify()))
+                .pipe($.if(config.production, $.uglify()))
                 .pipe(gulp.dest(paths.output.baseDir))
                 .pipe(new Elixir.Notification('RequireJS Compiled!'))
         );
