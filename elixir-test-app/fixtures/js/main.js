@@ -1,4 +1,3 @@
-
 define('lib1',[], function() {
 
 });
