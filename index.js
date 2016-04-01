@@ -1,5 +1,5 @@
 var gulp = require('gulp');
-var rjs = require('gulp-requirejs');
+var requirejsOptimize = require('gulp-requirejs-optimize');
 var _ = require('underscore');
 var Elixir = require('laravel-elixir');
 
@@ -25,16 +25,16 @@ Elixir.extend('requirejs', function (src, options, output) {
             gulp
                 .src(paths.src.path)
                 .pipe(
-                    rjs(options)
+                    requirejsOptimize(options)
                         .on('error', function (e) {
                             new Elixir.Notification().error(e, 'RequireJS Compilation Failed!');
 
                             this.emit('end');
                         })
-                        .pipe($.if(config.production, $.uglify()))
-                        .pipe(gulp.dest(paths.output.baseDir))
-                        .pipe(new Elixir.Notification('RequireJS Compiled!'))
                 )
+                .pipe($.if(config.production, $.uglify()))
+                .pipe(gulp.dest(paths.output.baseDir))
+                .pipe(new Elixir.Notification('RequireJS Compiled!'))
         );
     })
     .watch(config.get('assets.js.folder') + '/**/*.js');
