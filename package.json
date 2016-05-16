@@ -17,7 +17,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "gulp-requirejs-optimize": "^0.3.2"
+    "gulp-requirejs-optimize": "^0.3.2",
+    "underscore": "^1.8.3"
   },
   "repository": {
     "type": "git",
