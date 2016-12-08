@@ -19,6 +19,9 @@
   "dependencies": {
     "gulp-requirejs-optimize": "^0.3.2"
   },
+  "peerDependencies": {
+    "laravel-elixir": "^2.0"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/joecohens/laravel-elixir-requirejs"
